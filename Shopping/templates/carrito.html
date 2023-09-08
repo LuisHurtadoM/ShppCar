@@ -1,0 +1,75 @@
+
+<script src="https://www.paypal.com/sdk/js?client-id=Abk87tG1Sfrbe6rQOYa9-Lx_YGcvGaiZbHcwpo6Sb_mPI2GZNokirHJ8GLXn6wA_p8sx7omWb9AiD1v6&currency=EUR"></script>
+
+
+<div style=" background-color: #b5d1d8; border: 1px solid #b5d1d8; padding: 10px; font-family: 'Arial';">
+    <h3 style="margin-top: 5px; padding: auto;"><img src="/static/images/shopping-bag_2956820.png" style="width: 35px; height: 35px; padding-top: 0; margin-top: 2px;" alt="Tienda" ></a>Cesta de la compra</h3>
+    <div style="display:flexbox; flex-wrap: wrap;">
+        <table>
+            <thead>
+                <tr>
+                    <th><strong>Producto</strong></th>
+                    <th><strong>Precio</strong></th>
+                    <th><strong>Cantidad</strong></th>
+                    <th><strong>Subtotal</strong></th>
+                    <th><strong>Acciones</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if request.session.carrito.items %}
+                    {% for key, value in request.session.carrito.items %}
+                        <tr>
+                            <td>{{ value.nombre }}</td>
+                            <td>{{ value.precio }}</td>
+                            <td>{{ value.cantidad }}</td>
+                            <td>{{ value.subtotal }}</td>
+                            <td>
+                                <a href="agregar/{{key}}" class="btn badge btn-dark"><strong>+</strong></a>
+                                <span style="margin: 0 5px;"></span>
+                                <a href="sacar/{{key}}" class="btn badge btn-dark"><strong>-</strong></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td style="background-color: #bebdb2;">
+                            <p style="text-align: center; margin-top: 10px;"><strong>No hay productos seleccionados</strong></p>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+                
+            
+        </table>
+        <div class="d-flex justify-content-evenly">
+            <div><strong>Total a pagar:  {{ total_carrito}} €</strong></div>
+            <div id="paypal-button-container"></div>
+            <div><a href="limpiar/" id="limpiar"   class="btn badge btn-dark">Limpiar carrito</a></div>
+            
+        </div>
+        
+           
+             
+       
+        
+        <script>
+            // Render the PayPal button into #paypal-button-container
+            paypal.Buttons({
+                style: {
+                    layout: 'horizontal'
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '{{ total_carrito }}'
+                            }
+                        }]
+                    });
+                },
+            }).render('#paypal-button-container');
+        </script> 
+        
+
+    </div>
+</div>
